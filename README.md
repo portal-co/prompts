@@ -1,13 +1,14 @@
 # prompts
 
 ## Description
-Project prompts
+A collection of prompts and guidance documentation for AI agents.
 
 ## Goals
-- [ ] Add project goals
+- [ ] Store system prompts
+- [ ] Document agent workflows
 
 ## Progress
-- [ ] Initial setup
+- [ ] Markdown files for guidance and workflows present
 
 ---
 *AI assisted*
