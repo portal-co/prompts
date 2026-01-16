@@ -5,3 +5,7 @@ Rust is our main language of choice, used for non-web tasks for its powerful typ
 
 - Use `enum`s as much as possible; parse strings presented into rich types ASAP.
 - Use `BTree` collections as they are more reliable and don't require `std`
+
+# Platforms
+
+- WASM does NOT mean the web; do NOT depend on `wasm-bindgen` AT ALL outside of TypeScript interop crates, which should be colocated with TypeScript packages
