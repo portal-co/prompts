@@ -21,6 +21,13 @@ class Newtype{
 - On types, prefer them as much as possible, using TypeScript over JavaScript (use node `--experimental-strip-types`, for instance). Annotate Python programs, and lean towards Rust as the main language whenever possible, though functional languages can provide the needed expressivity as well
 - Keep a single source of truth; compile or process with citations it into derived artifacts
 
+- Language Choice:
+Rust: for production applications and compilers
+C/C++: for compatibility or as an output of a compiler ONLY
+TypeScript: for production websites and adjacent tooling not better served by Rust
+Go: for robust scripts which are intended to last
+Python: for one-time or few-time scripts (still make sure they are checked into Git though)
+
 # Dependencies
 
 - Minimize library dependencies, including standard library depeendencies, but
