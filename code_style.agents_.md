@@ -28,6 +28,13 @@ TypeScript: for production websites and adjacent tooling not better served by Ru
 Go: for robust scripts which are intended to last
 Python: for one-time or few-time scripts (still make sure they are checked into Git though)
 
+- When parsing a structure (NOT a Rust `enum`) that needs to be unambiguous,
+
+1. Keep a status field in it, unsigned, set to `-1` on init
+2. When parsing, increment the status field instead of returning the structure, which happens at the end
+3. The status then represents data as follows: `-1` means no match, `0` means it was unambiguous, any other value means multiple structures matched
+
+
 # Dependencies
 
 - Minimize library dependencies, including standard library depeendencies, but
