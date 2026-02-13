@@ -481,3 +481,62 @@ git push
 ---
 
 *This orchestration pattern enables scalable multi-repository AI agent workflows. For questions or enhancements, contact the platform team.*
+
+---
+
+# Example Scenarios
+
+## Multi-Repo Refactoring with Feed Files
+
+**Context:** Major API change requiring updates across 5 separate repositories.
+
+**Challenge:** Changes needed to be coordinated; frontend couldn't update until backend was deployed; tests needed to run in correct order.
+
+**Solution:**
+- Orchestrator repository created task feed files for each repo
+- Backend completed first, published status feed-out file
+- Frontend used `copy-feed-files` to detect backend readiness before starting
+- Each repo published completion signals back to orchestrator
+- Orchestrator validated all changes before approving production deployment
+
+**Outcome:** Complex multi-repo refactoring completed without manual coordination. Each agent knew when its prerequisites were met.
+
+**Key Lesson:** Feed files enable asynchronous coordination. Agents can poll for prerequisites rather than blocking or making assumptions.
+
+---
+
+## Distributed Task Planning: dreamcomp Ecosystem
+
+**Context:** The `dreamcomp` migration from `id-arena` affected multiple related repositories in the ecosystem.
+
+**Challenge:** Each repository had different migration requirements; some could proceed in parallel, others had dependencies.
+
+**Solution:**
+- Created orchestrator repo with comprehensive migration plan
+- Generated task feed files for each affected repository
+- Tasks included dependency information (e.g., "wait for core library migration")
+- Each repo used feed files to know its role in the overall plan
+- Completion signals allowed orchestrator to track progress
+
+**Outcome:** All repositories migrated according to plan. Human could review orchestrator's progress dashboard to see which repos were blocked vs completed.
+
+**Key Lesson:** Cross-repo orchestration works best with explicit planning. Generate the full task distribution plan before starting execution.
+
+---
+
+## Additional Examples
+
+<!-- Add more examples here as they arise. Format:
+
+### [Example Title]
+
+**Context:** [What was the project/situation]
+
+**Challenge:** [What problem needed solving]
+
+**Solution:** [How it was approached]
+
+**Outcome:** [What happened]
+
+**Key Lesson:** [What to remember for future work]
+-->

@@ -30,3 +30,41 @@ This is not common style, but we use it for type safety
 # Frontend
 
 - For dependencies, use compiled TypeScript source. Failing that, use a TypeScript library, which may already exist. Failing that, use a Rust WASM binary, but remember WASM is not web-exclusive and the `wasm-bindgen`-based library should be colocated with the frontend.
+
+---
+
+# Example Scenarios
+
+## Type-Safe Frontend with Newtypes
+
+**Context:** Large TypeScript frontend needed stronger type safety for domain models.
+
+**Challenge:** Primitive obsession made it easy to mix up user IDs, session tokens, and other string values.
+
+**Solution:**
+- Applied newtype pattern using private fields (#-syntax)
+- Created distinct types for UserId, SessionToken, ApiKey, etc.
+- Wrapped at API boundaries, unwrapped only when needed
+
+**Outcome:** TypeScript compiler caught numerous bugs where wrong ID types were being passed to functions.
+
+**Key Lesson:** Even in TypeScript, newtypes provide valuable compile-time safety. Use #-private fields to enforce encapsulation.
+
+---
+
+## Additional Examples
+
+<!-- Add more examples here as they arise. Format:
+
+### [Example Title]
+
+**Context:** [What was the project/situation]
+
+**Challenge:** [What problem needed solving]
+
+**Solution:** [How it was approached]
+
+**Outcome:** [What happened]
+
+**Key Lesson:** [What to remember for future work]
+-->

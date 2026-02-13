@@ -52,3 +52,43 @@ This repository uses AI agents to assist with code generation and task execution
 ---
 
 *These custom instructions are mandatory for all AI agent use in this repository. For questions, contact the repository maintainers.*
+
+---
+
+# Example Scenarios
+
+## Collaboration Over Replacement: moond Bit Ordering
+
+**Context:** Complex bit manipulation in `moond` project.
+
+**Challenge:** AI suggested approach; human had domain expertise about edge cases.
+
+**Solution:**
+- AI proposed general structure and generated initial implementation
+- Human reviewed and identified domain-specific requirements
+- Explicit discussion about bit ordering edge cases
+- Combined AI code generation with human insight
+- Added clear attribution disclaimers in generated code
+
+**Outcome:** Final solution was better than either AI or human would have produced alone.
+
+**Key Lesson:** AI agents should engage in explicit debate when conflicts arise. Human insight is valuable and should not be silently ignored.
+
+---
+
+## Additional Examples
+
+<!-- Add more examples here as they arise. Format:
+
+### [Example Title]
+
+**Context:** [What was the project/situation]
+
+**Challenge:** [What problem needed solving]
+
+**Solution:** [How it was approached]
+
+**Outcome:** [What happened]
+
+**Key Lesson:** [What to remember for future work]
+-->

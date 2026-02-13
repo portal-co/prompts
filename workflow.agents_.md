@@ -182,3 +182,59 @@ If a commit fails:
 ---
 
 *These workflow rules are mandatory for all AI agent operations in this repository. For questions, contact the repository maintainers.*
+
+---
+
+# Example Scenarios
+
+## Structured Planning Prevents Missteps: dreamcomp id-arena Migration
+
+**Context:** Large refactoring to migrate from `id-arena` library in `dreamcomp` project.
+
+**Challenge:** Changes affected hundreds of files; needed coordination between multiple work streams.
+
+**Solution:**
+- Created detailed change log BEFORE starting modifications
+- Used agent-internal change log with step-by-step checklist
+- Each step documented affected files and validation criteria
+- Human reviewed plan and suggested parallel-friendly approach
+
+**Outcome:** Migration completed without skipped steps or simplifications. Parallel development continued smoothly.
+
+**Key Lesson:** For complex multi-step workflows, create internal change logs at the start. Track every step; this prevents shortcuts and missed dependencies.
+
+---
+
+## Commit Message Clarity Enables Collaboration
+
+**Context:** Multiple AI agents working on different aspects of the same project.
+
+**Challenge:** Understanding which changes were AI-generated vs human-authored, and distinguishing between autonomous and reviewed changes.
+
+**Solution:**
+- Strict adherence to `[AI:<type>] description — timestamp` format
+- HITL agents used feature branches with PR workflow
+- TASK agents documented pre-approved workflows in commits
+
+**Outcome:** Git history became a clear audit trail. Humans could quickly identify which commits needed review.
+
+**Key Lesson:** Consistent commit message formatting is not bureaucracy—it's essential for multi-agent coordination and human oversight.
+
+---
+
+## Additional Examples
+
+<!-- Add more examples here as they arise. Format:
+
+### [Example Title]
+
+**Context:** [What was the project/situation]
+
+**Challenge:** [What problem needed solving]
+
+**Solution:** [How it was approached]
+
+**Outcome:** [What happened]
+
+**Key Lesson:** [What to remember for future work]
+-->

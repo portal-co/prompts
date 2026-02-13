@@ -206,3 +206,42 @@ grep -r "RESOLVED" . | grep "$(date +%Y-%m)"
 
 *These documentation standards are mandatory for all AI agent operations in this repository. For questions, contact the repository maintainers.*
 
+---
+
+# Example Scenarios
+
+## TODO:VERIFY Catches Assumptions
+
+**Context:** Migrating legacy code with incomplete documentation.
+
+**Challenge:** Some timeout values had no documented source; unclear if they were measured or guessed.
+
+**Solution:**
+- Marked all undocumented magic numbers with `TODO:VERIFY` tags
+- Included rationale: "Found in legacy code with no source citation"
+- Flagged for human review and testing
+- Human ran measurements to verify values were correct
+
+**Outcome:** Found 3 timeout values that were incorrect for current hardware; updated with proper citations.
+
+**Key Lesson:** When source is ambiguous, mark it. Better to flag uncertainty than silently propagate potentially wrong values.
+
+---
+
+## Additional Examples
+
+<!-- Add more examples here as they arise. Format:
+
+### [Example Title]
+
+**Context:** [What was the project/situation]
+
+**Challenge:** [What problem needed solving]
+
+**Solution:** [How it was approached]
+
+**Outcome:** [What happened]
+
+**Key Lesson:** [What to remember for future work]
+-->
+
