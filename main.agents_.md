@@ -17,6 +17,7 @@ This documentation is structured into specialized components covering different 
 - **[workflow.agents_.md](workflow.agents_.md)** - Version control, commit message standards, change tracking, and rollback procedures for AI agents
 - **[general_guidance.agents_.md](general_guidance.agents_.md)** - Attribution policy, disclaimers, and responsible AI usage guidelines
 - **[referenced_documents.agents_.md](referenced_documents.agents_.md)** - Documentation standards, source citation requirements, TODO:VERIFY and UNKNOWN tags
+- **[ai_key.agents_.md](ai_key.agents_.md)** - AI submission key system: agent forms, task interaction spectrum, OpenClaw threat model, and how the key filters bad actors while allowing legitimate agents
 
 ## Language-Specific Guidance
 
