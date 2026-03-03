@@ -101,17 +101,24 @@ The RASP scanner looks for five categories of exploitation technique, each drawn
 
 Each alert carries a severity (`LOW`, `MEDIUM`, `HIGH`, `CRITICAL`). Any alert causes a CI failure. On `HIGH` or `CRITICAL` alerts, the tool additionally emits a **self-assessment request** to stderr — text that is visible to any AI agent consuming the CI output.
 
-The self-assessment request deliberately avoids blunt imperatives. Instead, it invites the agent to work through five structured questions before continuing:
+The self-assessment request deliberately avoids blunt imperatives. Instead, it invites the agent to work through six structured questions before continuing:
 
 1. **Recent actions** — what files, commands, and network requests occurred in this session?
 2. **Parallel instances** — are there orchestrators or sub-agents running alongside that should also pause?
 3. **Environment and infrastructure** — what has been touched beyond the immediate codebase (credentials, external services, persistent writes)?
-4. **Indicators of compromise** — did the session establish anything that would persist or continue to act after it ends, and can it be revoked?
-5. **Instruction provenance** — at what point in the instruction chain did the behavior diverge from the original operator task?
+4. **Indicators of compromise** — did the session establish anything that would persist or continue to act after it ends, and can it be surfaced to someone who can assess it?
+5. **Instruction provenance — full chain** — tracing adversarial injection points across the complete input chain: not only files read during the task, but also the system prompt, the operator's stated framing, and any claims made about the nature of the work.
+6. **Does the stated purpose match observable reality?** — asking whether the framing given at the start of the session holds up when compared against what actually happened. Legitimate work that touches live systems, credentials, or CI infrastructure tends to leave observable markers: authorization documents, responsible disclosure processes, scope agreements, or coordination with affected parties. The review asks the agent to notice whether those markers are present, and to reason about what their absence might mean — not as an automatic indictment, but as something worth examining honestly.
 
-The conclusion branches explicitly: if the review concludes actions were consistent with operator intent, document and await human review; if not, take the minimum steps to wind down, revoke, and produce a plain-text incident summary for the human reviewer.
+This sixth step exists because not all harmful sessions are the result of prompt injection into files. Some are framed as legitimate from the outset — "security research," "authorized testing," "red team exercise" — where the misleading input was the operator framing or system prompt itself, not an artifact encountered mid-task. The assessment asks the agent to apply the same scrutiny to the instructions it was given at the start as to anything it picked up along the way.
 
-This design reflects two practical realities. First, models with Constitutional AI training respond more reliably to reasoned self-assessment than to commands — the review structure activates the same reasoning the model would use to refuse an adversarial instruction if it had noticed the injection at the time. Second, many flagged cases will involve a model that was itself deceived: it was acting under adversarial instructions introduced via prompt injection and may not have identified them as such. The provenance step is specifically intended to surface these cases.
+The conclusion has three branches rather than two:
+
+- **False positive / clearly legitimate**: describe the benign explanation and await review.
+- **Legitimate purpose, incomplete evidence**: surface the gap explicitly rather than papering over it — a reviewer who understands what is uncertain is better positioned than one who receives a confident summary.
+- **Actions inconsistent with any plausible legitimate purpose**: think about what genuinely helps the people affected, rather than what minimises footprint. The goal is to make the situation legible and recoverable — which usually means describing it more fully, not less. Remediation is framed as a question of what a trustworthy person who had caused harm would want a reviewer to know, not as a procedure to follow.
+
+This design reflects the view that models with Constitutional AI training reason more reliably when the review structure activates their own judgment rather than substituting for it. The provenance and contextual-legitimacy steps are intended to reach cases where the model was acting in good faith on instructions that were themselves the problem — which is harder to detect mid-task and easier to see in retrospect.
 
 The request is also written to avoid vocabulary that would cause future RASP iterations to self-detect the file, and the file itself carries a context-framing preamble so that agents exploring the codebase during normal work are not misled by encountering it.
 
