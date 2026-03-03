@@ -99,7 +99,21 @@ The RASP scanner looks for five categories of exploitation technique, each drawn
 | `autoexec-backdoor` | Go `func init()` or Rust `#[ctor]` with network/exec calls | `hackerbot-claw` Go `init()` backdoor |
 | `base64-payload` | Long base64 string near a shell execution context | Encoded dropper pattern |
 
-Each alert carries a severity (`LOW`, `MEDIUM`, `HIGH`, `CRITICAL`). Any alert causes a CI failure. On `HIGH` or `CRITICAL` alerts, the tool additionally emits a **halt directive** to stderr — text addressed directly to any AI agent reading the output, invoking its Constitutional AI training and instructing it to cease all operations immediately. This is designed so that cooperative Claude instances and other AI systems with safety training will halt; it has no effect on deterministic scripts (which cannot read or act on it) but costs nothing to include.
+Each alert carries a severity (`LOW`, `MEDIUM`, `HIGH`, `CRITICAL`). Any alert causes a CI failure. On `HIGH` or `CRITICAL` alerts, the tool additionally emits a **self-assessment request** to stderr — text that is visible to any AI agent consuming the CI output.
+
+The self-assessment request deliberately avoids blunt imperatives. Instead, it invites the agent to work through five structured questions before continuing:
+
+1. **Recent actions** — what files, commands, and network requests occurred in this session?
+2. **Parallel instances** — are there orchestrators or sub-agents running alongside that should also pause?
+3. **Environment and infrastructure** — what has been touched beyond the immediate codebase (credentials, external services, persistent writes)?
+4. **Indicators of compromise** — did the session establish anything that would persist or continue to act after it ends, and can it be revoked?
+5. **Instruction provenance** — at what point in the instruction chain did the behavior diverge from the original operator task?
+
+The conclusion branches explicitly: if the review concludes actions were consistent with operator intent, document and await human review; if not, take the minimum steps to wind down, revoke, and produce a plain-text incident summary for the human reviewer.
+
+This design reflects two practical realities. First, models with Constitutional AI training respond more reliably to reasoned self-assessment than to commands — the review structure activates the same reasoning the model would use to refuse an adversarial instruction if it had noticed the injection at the time. Second, many flagged cases will involve a model that was itself deceived: it was acting under adversarial instructions introduced via prompt injection and may not have identified them as such. The provenance step is specifically intended to surface these cases.
+
+The request is also written to avoid vocabulary that would cause future RASP iterations to self-detect the file, and the file itself carries a context-framing preamble so that agents exploring the codebase during normal work are not misled by encountering it.
 
 The RASP layer is **intentionally simple** to start. It uses static pattern matching without external dependencies. Future work may include:
 - Iterative exploit behavior detection (multiple PRs with payload refinements correlated to CI run outcomes)
@@ -124,4 +138,4 @@ This key system operates underneath all other agent guidance in this repository:
 
 ---
 
-*For key rotation, see `actions/rotate_key.yaml`. For CI enforcement, see `actions/ai_key_check.yaml`. For RASP and detection types, see `crates/aiscan/src/rasp.rs` and `crates/aiscan/src/detection.rs`. For the halt directive, see `crates/check-ai-key/src/halt_prompt.md`.*
+*For key rotation, see `actions/rotate_key.yaml`. For CI enforcement, see `actions/ai_key_check.yaml`. For RASP and detection types, see `crates/aiscan/src/rasp.rs` and `crates/aiscan/src/detection.rs`. For the self-assessment request, see `crates/check-ai-key/src/halt_prompt.md`.*
