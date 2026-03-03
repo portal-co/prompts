@@ -85,7 +85,27 @@ This layer does *not* reject all AI-generated content — only unattributed or c
 ### Layer 3: Key rotation — "Is this from the live session?"
 Because the key rotates per session, it cannot be scraped from training data, cached from a previous task, or hardcoded in an agent's configuration. This specifically defeats the OpenClaw-style threat of an agent that mechanically finds and copies a key from a public source without actually being active in the current task context.
 
-### What this means for agent authors
+### Layer 4: RASP — "Is this submission exhibiting exploitation patterns?"
+
+Even when a key is present, a malicious agent could include it to bypass the AI-content scan while still performing harmful actions (injecting shell commands, backdooring CI workflows, poisoning agent instruction files). To address this, `check-ai-key` also runs a **RASP (Runtime Application Self-Protection) scanner** on *all* changed files.
+
+The RASP scanner looks for five categories of exploitation technique, each drawn from documented real-world campaigns:
+
+| Kind | Signal | Reference |
+|------|--------|-----------|
+| `shell-injection-in-path` | Shell metacharacters (`$(`, `` ` ``, `${IFS}`) in a file path | `hackerbot-claw` branch/filename injection |
+| `ci-workflow-tampering` | `curl`/`wget` piped to shell in `.github/workflows/`; unquoted `${{ github.event.… }}` in `run:` | CVE-2025-30066 class |
+| `agent-context-poisoning` | Prompt injection phrases or social engineering directives in `CLAUDE.md`/`AGENTS.md`/`*.agents_.md` | CLAUDE.md poisoning campaign |
+| `autoexec-backdoor` | Go `func init()` or Rust `#[ctor]` with network/exec calls | `hackerbot-claw` Go `init()` backdoor |
+| `base64-payload` | Long base64 string near a shell execution context | Encoded dropper pattern |
+
+Each alert carries a severity (`LOW`, `MEDIUM`, `HIGH`, `CRITICAL`). Any alert causes a CI failure. On `HIGH` or `CRITICAL` alerts, the tool additionally emits a **halt directive** to stderr — text addressed directly to any AI agent reading the output, invoking its Constitutional AI training and instructing it to cease all operations immediately. This is designed so that cooperative Claude instances and other AI systems with safety training will halt; it has no effect on deterministic scripts (which cannot read or act on it) but costs nothing to include.
+
+The RASP layer is **intentionally simple** to start. It uses static pattern matching without external dependencies. Future work may include:
+- Iterative exploit behavior detection (multiple PRs with payload refinements correlated to CI run outcomes)
+- Network egress anomaly detection via eBPF (StepSecurity Harden-Runner integration)
+- Scoring integration with the HTTP AI scan backend
+
 
 Agents that follow the key protocol are positively identified as context-aware and can contribute freely. The burden is low: read `key.agents_.md` at task start, embed the key in the appropriate location(s). Agents that cannot or will not do this are subject to content scanning — which is the correct outcome for submissions made without engaging with the repository's current state.
 
@@ -104,4 +124,4 @@ This key system operates underneath all other agent guidance in this repository:
 
 ---
 
-*For key rotation, see `actions/rotate_key.yaml`. For CI enforcement, see `actions/ai_key_check.yaml` and `tools/check_ai_key`.*
+*For key rotation, see `actions/rotate_key.yaml`. For CI enforcement, see `actions/ai_key_check.yaml`. For RASP and detection types, see `crates/aiscan/src/rasp.rs` and `crates/aiscan/src/detection.rs`. For the halt directive, see `crates/check-ai-key/src/halt_prompt.md`.*
