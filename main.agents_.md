@@ -17,7 +17,7 @@ This documentation is structured into specialized components covering different 
 - **[workflow.agents_.md](workflow.agents_.md)** - Version control, commit message standards, change tracking, and rollback procedures for AI agents
 - **[general_guidance.agents_.md](general_guidance.agents_.md)** - Attribution policy, disclaimers, and responsible AI usage guidelines
 - **[referenced_documents.agents_.md](referenced_documents.agents_.md)** - Documentation standards, source citation requirements, TODO:VERIFY and UNKNOWN tags
-- **[ai_key.agents_.md](ai_key.agents_.md)** - AI submission key system: agent forms, task interaction spectrum, OpenClaw threat model, and how the key filters bad actors while allowing legitimate agents
+- **[ai_key.agents_.md](ai_key.agents_.md)** - AI submission key system (summary + link): four-layer filter overview and RASP scope note. Full document lives in [`portal-co/tiny-rasp`](https://github.com/portal-co/tiny-rasp/blob/main/ai_key.agents_.md)
 
 ## Language-Specific Guidance
 
